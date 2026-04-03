@@ -31,4 +31,31 @@
 各ディレクトリをそのままコピーすると、プロジェクト root として使える構成にしてあるにゃ。  
 `base` は `.devcontainer/devcontainer.json` と `.gitignore` を、`node` はそれに加えて `package.json` と ESLint / Prettier 設定を同梱しているにゃ。
 
+## CLI
+
+`bin/devcontainer-base` でテンプレートを配置できるにゃ。
+
+```sh
+bin/devcontainer-base <base> [destination]
+```
+
+例:
+
+```sh
+bin/devcontainer-base base
+bin/devcontainer-base node ./my-app
+```
+
+補完定義は `completions/` に置いてあり、後から `Makefile` 側でインストールできる前提にしてあるにゃ。
+
+```sh
+make help
+make install
+make update
+make uninstall
+```
+
+`make` だけを実行した時は `make help` と同じ案内が出るにゃ。  
+`make install` と `make update` は `~/.local/bin` と `~/.local/share/...` に CLI と補完を配置するにゃ。
+
 詳しい使い方はそれぞれの README を見るにゃ。

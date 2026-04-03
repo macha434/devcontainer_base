@@ -1,0 +1,14 @@
+#compdef devcontainer-base
+
+local -a bases
+bases=("${(@f)$(${words[1]} --list-bases 2>/dev/null)}")
+
+if (( CURRENT == 2 )); then
+  _describe 'devcontainer base' bases
+  return
+fi
+
+if (( CURRENT == 3 )); then
+  _path_files -/
+  return
+fi

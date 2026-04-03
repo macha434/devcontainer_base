@@ -32,3 +32,5 @@ Node 向けの devcontainer ベース雛形だにゃ。
 4. `node -v`、`pnpm -v`、`eslint -v`、`prettier -v` を確認するにゃ
 
 `package.json` に依存と scripts を入れてあるので、実運用ではグローバル CLI より `pnpm lint` や `pnpm format` を使う想定だにゃ。
+
+CLI から入れる場合は、リポジトリ root で `bin/devcontainer-base node [destination]` を使うにゃ。

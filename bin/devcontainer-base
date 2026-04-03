@@ -1,0 +1,133 @@
+#!/usr/bin/env sh
+
+set -eu
+
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+REPO_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
+PROGRAM_NAME=${0##*/}
+
+usage() {
+  cat <<EOF
+Usage: $PROGRAM_NAME <base> [destination]
+
+Install a devcontainer base template into destination.
+
+Arguments:
+  base         Template name such as: $(list_bases_inline)
+  destination  Target directory to copy into (default: ./)
+
+Options:
+  --help       Show this help
+  --list-bases Print available base names
+EOF
+}
+
+is_template_dir() {
+  [ -d "$1" ] && [ -f "$1/.devcontainer/devcontainer.json" ]
+}
+
+list_bases() {
+  for path in "$REPO_ROOT"/*; do
+    [ -d "$path" ] || continue
+    name=$(basename "$path")
+    case "$name" in
+      .*|bin|completions) continue ;;
+    esac
+    if is_template_dir "$path"; then
+      printf '%s\n' "$name"
+    fi
+  done | sort
+}
+
+list_bases_inline() {
+  bases=$(list_bases | tr '\n' ' ' | sed 's/[[:space:]]*$//')
+  if [ -n "$bases" ]; then
+    printf '%s' "$bases"
+  else
+    printf '%s' "(none)"
+  fi
+}
+
+error() {
+  printf '%s\n' "$*" >&2
+  exit 1
+}
+
+confirm_overwrite() {
+  if [ -t 0 ]; then
+    printf 'Existing files will be overwritten in %s. Continue? [y/N] ' "$1" >&2
+    IFS= read -r answer
+  else
+    return 1
+  fi
+
+  case "$answer" in
+    y|Y|yes|YES) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+has_conflicts() {
+  src_dir=$1
+  dest_dir=$2
+
+  for src_entry in "$src_dir"/.[!.]* "$src_dir"/..?* "$src_dir"/*; do
+    [ -e "$src_entry" ] || continue
+    name=$(basename "$src_entry")
+    if [ -e "$dest_dir/$name" ]; then
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+copy_template() {
+  src_dir=$1
+  dest_dir=$2
+
+  for src_entry in "$src_dir"/.[!.]* "$src_dir"/..?* "$src_dir"/*; do
+    [ -e "$src_entry" ] || continue
+    cp -R "$src_entry" "$dest_dir/"
+  done
+}
+
+if [ "${1-}" = "--help" ]; then
+  usage
+  exit 0
+fi
+
+if [ "${1-}" = "--list-bases" ]; then
+  list_bases
+  exit 0
+fi
+
+[ $# -ge 1 ] || {
+  usage >&2
+  exit 1
+}
+
+[ $# -le 2 ] || error "Too many arguments. Run '$PROGRAM_NAME --help' for usage."
+
+base_name=$1
+destination=${2:-./}
+
+case "$base_name" in
+  .*|"") error "Invalid base name: $base_name" ;;
+esac
+
+src_dir=$REPO_ROOT/$base_name
+is_template_dir "$src_dir" || error "Unknown base '$base_name'. Available bases: $(list_bases_inline)"
+
+[ -e "$destination" ] || error "Destination does not exist: $destination"
+[ -d "$destination" ] || error "Destination is not a directory: $destination"
+
+dest_dir=$(CDPATH= cd -- "$destination" && pwd)
+
+if has_conflicts "$src_dir" "$dest_dir"; then
+  confirm_overwrite "$dest_dir" || error "Aborted due to existing files in $dest_dir"
+fi
+
+copy_template "$src_dir" "$dest_dir"
+
+printf "Installed '%s' into %s\n" "$base_name" "$dest_dir"
