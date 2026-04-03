@@ -3,11 +3,19 @@
 set -eu
 
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-REPO_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
+PREFIX_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
+INSTALLED_TEMPLATE_ROOT=$PREFIX_ROOT/share/devcontainer-base/templates
+REPO_TEMPLATE_ROOT=$PREFIX_ROOT
 PROGRAM_NAME=${0##*/}
 
+if [ -d "$INSTALLED_TEMPLATE_ROOT" ]; then
+  TEMPLATE_ROOT=$INSTALLED_TEMPLATE_ROOT
+else
+  TEMPLATE_ROOT=$REPO_TEMPLATE_ROOT
+fi
+
 usage() {
-  cat <<EOF
+  cat <<EOF2
 Usage: $PROGRAM_NAME <base> [destination]
 
 Install a devcontainer base template into destination.
@@ -19,7 +27,7 @@ Arguments:
 Options:
   --help       Show this help
   --list-bases Print available base names
-EOF
+EOF2
 }
 
 is_template_dir() {
@@ -27,7 +35,7 @@ is_template_dir() {
 }
 
 list_bases() {
-  for path in "$REPO_ROOT"/*; do
+  for path in "$TEMPLATE_ROOT"/*; do
     [ -d "$path" ] || continue
     name=$(basename "$path")
     case "$name" in
@@ -116,7 +124,7 @@ case "$base_name" in
   .*|"") error "Invalid base name: $base_name" ;;
 esac
 
-src_dir=$REPO_ROOT/$base_name
+src_dir=$TEMPLATE_ROOT/$base_name
 is_template_dir "$src_dir" || error "Unknown base '$base_name'. Available bases: $(list_bases_inline)"
 
 [ -e "$destination" ] || error "Destination does not exist: $destination"

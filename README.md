@@ -56,6 +56,6 @@ make uninstall
 ```
 
 `make` だけを実行した時は `make help` と同じ案内が出るにゃ。  
-`make install` と `make update` は `~/.local/bin` と `~/.local/share/...` に CLI と補完を配置するにゃ。
+`make install` と `make update` は `~/.local/bin` と `~/.local/share/...` に CLI、補完、テンプレート本体を配置するにゃ。
 
 詳しい使い方はそれぞれの README を見るにゃ。
