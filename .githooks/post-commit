@@ -4,7 +4,9 @@ set -eu
 
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 REPO_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
+ORIGINAL_PWD=$(pwd)
 
-pushd "$REPO_ROOT"
+trap 'cd "$ORIGINAL_PWD"' EXIT
+
+cd "$REPO_ROOT"
 make update
-popd
