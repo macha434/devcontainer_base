@@ -4,6 +4,7 @@
 
 - `base`: git と zsh を使える最小の共通ベース構成
 - `node`: `mcr.microsoft.com/devcontainers/base:ubuntu` を土台に features で整える構成
+- `python`: Python 3.12 と `ruff` / `pre-commit` を同梱した汎用構成
 
 ## テンプレートごとの内容
 
@@ -23,13 +24,23 @@
 - zsh
 - ホストの `~/.gitconfig` をコンテナから参照
 
+### `python`
+
+- Python 3.12
+- Ruff
+- pre-commit
+- git
+- zsh
+- ホストの `~/.gitconfig` をコンテナから参照
+
 ## 配置
 
 - `base`
 - `node`
+- `python`
 
 各ディレクトリをそのままコピーすると、プロジェクト root として使える構成にしてあるにゃ。  
-`base` は `.devcontainer/devcontainer.json` と `.gitignore` を、`node` はそれに加えて `package.json` と ESLint / Prettier 設定を同梱しているにゃ。
+`base` は `.devcontainer/devcontainer.json` と `.gitignore` を、`node` はそれに加えて `package.json` と ESLint / Prettier 設定を、`python` は `pyproject.toml` と Ruff / pre-commit 設定を同梱しているにゃ。
 
 ## CLI
 
@@ -44,6 +55,7 @@ bin/devcontainer-base <base> [destination]
 ```sh
 bin/devcontainer-base base
 bin/devcontainer-base node ./my-app
+bin/devcontainer-base python ./my-app
 ```
 
 補完定義は `completions/` に置いてあり、後から `Makefile` 側でインストールできる前提にしてあるにゃ。
