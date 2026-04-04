@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+. "$(dirname -- "$0")/_/husky.sh"
+
+before_state=$(git diff --cached --name-only --diff-filter=ACMR)
+
+pnpm exec lint-staged
+
+after_state=$(git diff --cached --name-only --diff-filter=ACMR)
+
+if [ "$before_state" != "$after_state" ] || ! git diff --cached --quiet; then
+  printf '%s\n' 'pre-commit で自動修正が入ったにゃ。内容を確認して再度 commit してにゃ。' >&2
+  exit 1
+fi
