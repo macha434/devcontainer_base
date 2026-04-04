@@ -58,7 +58,7 @@ bin/devcontainer-base node ./my-app
 bin/devcontainer-base python ./my-app
 ```
 
-補完定義は `completions/` に置いてあり、後から `Makefile` 側でインストールできる前提にしてあるにゃ。
+補完定義は `completions/` に置いてあり、後から `Makefile` 側でシンボリックリンクとして導入できる前提にしてあるにゃ。
 
 ```sh
 make help
@@ -68,6 +68,7 @@ make uninstall
 ```
 
 `make` だけを実行した時は `make help` と同じ案内が出るにゃ。  
-`make install` と `make update` は `~/.local/bin` と `~/.local/share/...` に CLI、補完、テンプレート本体を配置するにゃ。
+`make install` と `make update` は `~/.local/bin` と `~/.local/share/...` に CLI、補完、テンプレートへのシンボリックリンクを作るにゃ。  
+`make install` はあわせてこのリポジトリの `core.hooksPath` を `.githooks` に向けて、commit 後に `make update` が自動で走る `post-commit` hook も有効化するにゃ。
 
 詳しい使い方はそれぞれの README を見るにゃ。
