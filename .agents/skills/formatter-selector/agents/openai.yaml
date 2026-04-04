@@ -1,0 +1,4 @@
+interface:
+  display_name: "Formatter Selector"
+  short_description: "各言語の formatter を調査して導入方法まで決める"
+  default_prompt: "新しい言語向け devcontainer を作る前に、主流 formatter と導入方法を決めたい"
