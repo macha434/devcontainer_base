@@ -61,42 +61,119 @@ error() {
   exit 1
 }
 
-confirm_overwrite() {
-  if [ -t 0 ]; then
-    printf 'Existing files will be overwritten in %s. Continue? [y/N] ' "$1" >&2
-    IFS= read -r answer
-  else
-    return 1
-  fi
-
-  case "$answer" in
-    y|Y|yes|YES) return 0 ;;
-    *) return 1 ;;
-  esac
+record_conflict() {
+  rel_path=$1
+  reason=$2
+  printf '%s: %s\n' "$rel_path" "$reason" >>"$CONFLICTS_FILE"
 }
 
-has_conflicts() {
-  src_dir=$1
-  dest_dir=$2
+skip_subtree() {
+  rel_path=$1
+  printf '%s/\n' "$rel_path" >>"$SKIPPED_PATHS_FILE"
+}
 
-  for src_entry in "$src_dir"/.[!.]* "$src_dir"/..?* "$src_dir"/*; do
-    [ -e "$src_entry" ] || continue
-    name=$(basename "$src_entry")
-    if [ -e "$dest_dir/$name" ]; then
-      return 0
-    fi
-  done
+is_skipped_path() {
+  rel_path=$1
+
+  while IFS= read -r skipped_path; do
+    [ -n "$skipped_path" ] || continue
+    case "$rel_path/" in
+      "$skipped_path"*) return 0 ;;
+    esac
+  done <"$SKIPPED_PATHS_FILE"
 
   return 1
 }
 
-copy_template() {
+is_binary_file() {
+  file_path=$1
+  [ -f "$file_path" ] || return 1
+  od -An -tx1 -N 4096 "$file_path" | tr -d ' \n' | grep -qi '00'
+}
+
+append_file_content() {
+  file_path=$1
+
+  [ -f "$file_path" ] || return 0
+
+  cat "$file_path"
+
+  if [ -s "$file_path" ] && [ "$(tail -c 1 "$file_path" | od -An -tx1 | tr -d ' \n')" != "0a" ]; then
+    printf '\n'
+  fi
+}
+
+write_conflict_file() {
+  dest_path=$1
+  src_path=$2
+
+  tmp_path=$(mktemp)
+  {
+    printf '%s\n' '<<<<<<< local'
+    append_file_content "$dest_path"
+    printf '%s\n' '======='
+    append_file_content "$src_path"
+    printf '%s\n' '>>>>>>> template'
+  } >"$tmp_path"
+  mv "$tmp_path" "$dest_path"
+}
+
+install_template() {
   src_dir=$1
   dest_dir=$2
 
-  for src_entry in "$src_dir"/.[!.]* "$src_dir"/..?* "$src_dir"/*; do
-    [ -e "$src_entry" ] || continue
-    cp -R "$src_entry" "$dest_dir/"
+  find "$src_dir" -mindepth 1 | sort | while IFS= read -r src_path; do
+    rel_path=${src_path#"$src_dir"/}
+    dest_path=$dest_dir/$rel_path
+
+    if is_skipped_path "$rel_path"; then
+      continue
+    fi
+
+    if [ -d "$src_path" ]; then
+      if [ -e "$dest_path" ] && [ ! -d "$dest_path" ]; then
+        record_conflict "$rel_path" "existing path is not a directory"
+        skip_subtree "$rel_path"
+        continue
+      fi
+
+      mkdir -p "$dest_path"
+      continue
+    fi
+
+    parent_dir=$(dirname "$dest_path")
+    if [ -e "$parent_dir" ] && [ ! -d "$parent_dir" ]; then
+      record_conflict "$rel_path" "parent path is not a directory"
+      continue
+    fi
+    mkdir -p "$parent_dir"
+
+    if [ ! -e "$dest_path" ]; then
+      cp "$src_path" "$dest_path"
+      continue
+    fi
+
+    if [ -d "$dest_path" ]; then
+      record_conflict "$rel_path" "existing path is a directory"
+      continue
+    fi
+
+    if [ ! -f "$dest_path" ]; then
+      record_conflict "$rel_path" "existing path type is unsupported"
+      continue
+    fi
+
+    if cmp -s "$src_path" "$dest_path"; then
+      continue
+    fi
+
+    if is_binary_file "$src_path" || is_binary_file "$dest_path"; then
+      record_conflict "$rel_path" "binary file differs; resolve manually"
+      continue
+    fi
+
+    write_conflict_file "$dest_path" "$src_path"
+    record_conflict "$rel_path" "conflict markers written"
   done
 }
 
@@ -131,11 +208,15 @@ is_template_dir "$src_dir" || error "Unknown base '$base_name'. Available bases:
 [ -d "$destination" ] || error "Destination is not a directory: $destination"
 
 dest_dir=$(CDPATH= cd -- "$destination" && pwd)
+CONFLICTS_FILE=$(mktemp)
+SKIPPED_PATHS_FILE=$(mktemp)
+trap 'rm -f "$CONFLICTS_FILE" "$SKIPPED_PATHS_FILE"' EXIT
 
-if has_conflicts "$src_dir" "$dest_dir"; then
-  confirm_overwrite "$dest_dir" || error "Aborted due to existing files in $dest_dir"
-fi
-
-copy_template "$src_dir" "$dest_dir"
+install_template "$src_dir" "$dest_dir"
 
 printf "Installed '%s' into %s\n" "$base_name" "$dest_dir"
+
+if [ -s "$CONFLICTS_FILE" ]; then
+  printf '%s\n' 'Conflicts require manual resolution in the following files:' >&2
+  sed 's/^/- /' "$CONFLICTS_FILE" >&2
+fi

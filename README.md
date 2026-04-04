@@ -61,6 +61,9 @@ bin/devcontainer-base node ./my-app
 bin/devcontainer-base python ./my-app
 ```
 
+既存ファイルと差分がある場合は、対象ファイルへ Git 風の conflict marker をそのまま書き込むにゃ。  
+実行後に衝突したファイル一覧を表示するので、必要な箇所は手動で修正するにゃ。3-way マージや対話式の overwrite 確認はしないにゃ。
+
 補完定義は `completions/` に置いてあり、後から `Makefile` 側でシンボリックリンクとして導入できる前提にしてあるにゃ。
 
 ```sh
