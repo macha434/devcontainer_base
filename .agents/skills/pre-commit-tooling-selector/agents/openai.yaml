@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pre-commit Tooling Selector"
+  short_description: "コミット時に実行する formatter と linter の主流構成を調査して返す"
+  default_prompt: "新しい言語向けに pre-commit で使う formatter と linter を選びたい"
