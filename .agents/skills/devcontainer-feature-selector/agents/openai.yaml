@@ -1,0 +1,4 @@
+interface:
+  display_name: "Feature Selector"
+  short_description: "公式 devcontainer feature の採用可否を調査する"
+  default_prompt: "導入したい runtime やツールに対応する devcontainer feature があるか調べて、feature を使うべきか判断したい"
