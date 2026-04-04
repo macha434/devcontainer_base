@@ -13,7 +13,7 @@ Node 向けの devcontainer ベース雛形だにゃ。
 - ESLint / Prettier をグローバル CLI として導入
 - `zsh` を既定シェルとして使う
 - VS Code の ESLint / Prettier 拡張を自動で入れる
-- ホストの `~/.gitconfig` を bind mount
+- ホストの `~/.gitconfig` と `~/.zshrc` を read-only で bind mount
 
 ## 同梱サンプル
 

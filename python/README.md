@@ -13,7 +13,7 @@ Python 向けの devcontainer ベース雛形だにゃ。
 - `pre-commit` で commit 時に `ruff` と基本的なファイル整形を実行
 - `zsh` を既定シェルとして使う
 - VS Code の Python / Pylance / Ruff 拡張を自動で入れる
-- ホストの `~/.gitconfig` を bind mount
+- ホストの `~/.gitconfig` と `~/.zshrc` を read-only で bind mount
 
 ## 同梱サンプル
 

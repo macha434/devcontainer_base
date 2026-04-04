@@ -10,7 +10,8 @@
   },
   "remoteUser": "base",
   "mounts": [
-    "source=${localEnv:HOME}/.gitconfig,target=/home/base/.gitconfig,type=bind,consistency=cached"
+    "source=${localEnv:HOME}/.gitconfig,target=/home/base/.gitconfig,type=bind,consistency=cached,readonly",
+    "source=${localEnv:HOME}/.zshrc,target=/home/base/.zshrc,type=bind,consistency=cached,readonly"
   ],
   "customizations": {
     "vscode": {
