@@ -13,6 +13,7 @@
 - git
 - zsh
 - ホストの `~/.gitconfig` をコンテナから参照
+- VS Code で Codex / Git Graph / Git History / Indent Rainbow を追加する
 
 ### `node`
 
@@ -23,6 +24,7 @@
 - git
 - zsh
 - ホストの `~/.gitconfig` をコンテナから参照
+- VS Code で Codex / Git Graph / Git History / Indent Rainbow を追加する
 
 ### `python`
 
@@ -32,6 +34,7 @@
 - git
 - zsh
 - ホストの `~/.gitconfig` をコンテナから参照
+- VS Code で Codex / Git Graph / Git History / Indent Rainbow を追加する
 
 ## 配置
 
@@ -70,5 +73,7 @@ make uninstall
 `make` だけを実行した時は `make help` と同じ案内が出るにゃ。  
 `make install` と `make update` は `~/.local/bin` と `~/.local/share/...` に CLI、補完、テンプレートへのシンボリックリンクを作るにゃ。  
 `make install` はあわせてこのリポジトリの `core.hooksPath` を `.githooks` に向けて、commit 後に `make update` が自動で走る `post-commit` hook も有効化するにゃ。
+
+Codex 拡張は追加されるけれど、利用時は ChatGPT サインイン前提にゃ。API キーや `~/.codex` の共有設定はこのテンプレートには含めていないにゃ。
 
 詳しい使い方はそれぞれの README を見るにゃ。

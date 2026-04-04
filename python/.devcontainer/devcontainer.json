@@ -23,7 +23,11 @@
       "extensions": [
         "ms-python.python",
         "ms-python.vscode-pylance",
-        "charliermarsh.ruff"
+        "charliermarsh.ruff",
+        "openai.chatgpt",
+        "mhutchie.git-graph",
+        "donjayamanne.githistory",
+        "oderwat.indent-rainbow"
       ],
       "settings": {
         "[python]": {

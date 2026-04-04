@@ -21,7 +21,11 @@
     "vscode": {
       "extensions": [
         "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode"
+        "esbenp.prettier-vscode",
+        "openai.chatgpt",
+        "mhutchie.git-graph",
+        "donjayamanne.githistory",
+        "oderwat.indent-rainbow"
       ],
       "settings": {
         "editor.codeActionsOnSave": {
