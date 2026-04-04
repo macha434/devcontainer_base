@@ -11,7 +11,7 @@
     },
     "ghcr.io/devcontainers/features/git:1": {}
   },
-  "remoteUser": "node",
+  "remoteUser": "vscode",
   "mounts": [
     "source=${localEnv:HOME}/.gitconfig,target=/home/node/.gitconfig,type=bind,consistency=cached,readonly",
     "source=${localEnv:HOME}/.zshrc,target=/home/node/.zshrc,type=bind,consistency=cached,readonly"

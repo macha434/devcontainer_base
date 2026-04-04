@@ -88,7 +88,7 @@ is_skipped_path() {
 is_binary_file() {
   file_path=$1
   [ -f "$file_path" ] || return 1
-  od -An -tx1 -N 4096 "$file_path" | tr -d ' \n' | grep -qi '00'
+  od -An -tx1 -N 4096 "$file_path" | grep -Eq '(^|[[:space:]])00($|[[:space:]])'
 }
 
 append_file_content() {
@@ -122,7 +122,7 @@ install_template() {
   src_dir=$1
   dest_dir=$2
 
-  find "$src_dir" -mindepth 1 | sort | while IFS= read -r src_path; do
+  find -H "$src_dir" -mindepth 1 | sort | while IFS= read -r src_path; do
     rel_path=${src_path#"$src_dir"/}
     dest_path=$dest_dir/$rel_path
 
