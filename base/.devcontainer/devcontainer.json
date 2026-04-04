@@ -13,6 +13,7 @@
     "source=${localEnv:HOME}/.gitconfig,target=/home/base/.gitconfig,type=bind,consistency=cached,readonly",
     "source=${localEnv:HOME}/.zshrc,target=/home/base/.zshrc,type=bind,consistency=cached,readonly"
   ],
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
       "extensions": [

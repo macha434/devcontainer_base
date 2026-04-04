@@ -16,7 +16,7 @@
     "source=${localEnv:HOME}/.gitconfig,target=/home/node/.gitconfig,type=bind,consistency=cached,readonly",
     "source=${localEnv:HOME}/.zshrc,target=/home/node/.zshrc,type=bind,consistency=cached,readonly"
   ],
-  "postCreateCommand": "bash -lc 'corepack enable && corepack prepare pnpm@latest --activate && npm install --global eslint prettier'",
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
       "extensions": [

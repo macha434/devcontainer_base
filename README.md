@@ -75,5 +75,6 @@ make uninstall
 `make install` はあわせてこのリポジトリの `core.hooksPath` を `.githooks` に向けて、commit 後に `make update` が自動で走る `post-commit` hook も有効化するにゃ。
 
 Codex 拡張は追加されるけれど、利用時は ChatGPT サインイン前提にゃ。API キーや `~/.codex` の共有設定はこのテンプレートには含めていないにゃ。
+各 devcontainer は `.devcontainer/post-create.sh` で現在の workspace を Git の `safe.directory` に自動追加するにゃ。`~/.gitconfig` はそのまま read-only で参照しつつ、コンテナ内の path は別で登録する形にしてあるにゃ。
 
 詳しい使い方はそれぞれの README を見るにゃ。

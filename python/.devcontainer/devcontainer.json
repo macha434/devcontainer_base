@@ -17,7 +17,7 @@
     "source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached,readonly",
     "source=${localEnv:HOME}/.zshrc,target=/home/vscode/.zshrc,type=bind,consistency=cached,readonly"
   ],
-  "postCreateCommand": "bash -lc 'python -m pip install --user --upgrade pip && python -m pip install --user ruff pre-commit && if [ -d .git ]; then pre-commit install --install-hooks; fi'",
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
       "extensions": [
