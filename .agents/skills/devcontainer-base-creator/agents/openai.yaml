@@ -1,0 +1,4 @@
+interface:
+  display_name: "Devcontainer Base Creator"
+  short_description: "この repo に新しい devcontainer ベースを追加する手順をまとめる"
+  default_prompt: "新しい言語向け devcontainer ベースを追加したい"
