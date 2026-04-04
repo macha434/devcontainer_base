@@ -19,11 +19,12 @@ description: この devcontainer_base リポジトリで新しい言語テンプ
 
 1. 対象言語を確認するにゃ。
 2. [references/tooling-research-guidelines.md](references/tooling-research-guidelines.md) を読むにゃ。
-3. 主流 linter を一次情報で調査するにゃ。
-4. 推奨 linter を決めるにゃ。
-5. formatter と linter を同じツールでまかなう構成が主流か確認するにゃ。
-6. その linter に使える feature があるかを `devcontainer-feature-selector` 相当の知識で確認するにゃ。
-7. feature 有り / 無しに応じて導入案を返すにゃ。
+3. [references/devcontainer-features.md](references/devcontainer-features.md) を読んで、feature 確認の基準を揃えるにゃ。
+4. 主流 linter を一次情報で調査するにゃ。
+5. 推奨 linter を決めるにゃ。
+6. formatter と linter を同じツールでまかなう構成が主流か確認するにゃ。
+7. その linter に使える feature があるかを reference に沿って確認するにゃ。
+8. feature 有り / 無しに応じて導入案を返すにゃ。
 
 ## 出力形式
 
