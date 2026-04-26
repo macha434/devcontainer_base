@@ -9,13 +9,18 @@
     "ghcr.io/devcontainers/features/node:1": {
       "version": "22"
     },
-    "ghcr.io/devcontainers/features/git:1": {}
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
   },
-  "remoteUser": "vscode",
   "mounts": [
-    "source=${localEnv:HOME}/.gitconfig,target=/home/node/.gitconfig,type=bind,consistency=cached,readonly",
-    "source=${localEnv:HOME}/.zshrc,target=/home/node/.zshrc,type=bind,consistency=cached,readonly"
+    "source=codex-auth,target=/mnt/codex-auth,type=volume",
+    "source=github-auth,target=/mnt/github-auth,type=volume"
   ],
+  "remoteEnv": {
+    "GH_CONFIG_DIR": "/mnt/github-auth/gh",
+    "PNPM_HOME": "/home/vscode/.pnpm",
+    "PATH": "/home/vscode/.pnpm:${containerEnv:PATH}"
+  },
   "postCreateCommand": "bash .devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
